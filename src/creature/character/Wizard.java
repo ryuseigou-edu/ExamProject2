@@ -1,3 +1,8 @@
+package creature.character;
+
+import creature.Character;
+import creature.Creature;
+
 public class Wizard extends Character {
     private int mp;
 

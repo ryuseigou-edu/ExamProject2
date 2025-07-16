@@ -1,3 +1,5 @@
+package creature;
+
 public abstract class Character implements Creature {
     private final String name;
     private int hp;
