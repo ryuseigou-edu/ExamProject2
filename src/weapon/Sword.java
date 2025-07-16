@@ -1,7 +1,7 @@
 package weapon;
 
 public class Sword extends Weapon {
-    Sword(){
+    public Sword(){
         super("剣",10);
     }
 

@@ -1,7 +1,7 @@
 package weapon;
 
 public class Wand extends Weapon{
-    Wand() {
+    public Wand() {
         super("魔法の杖", 15);
     }
 

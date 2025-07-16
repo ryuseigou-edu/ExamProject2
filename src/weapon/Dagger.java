@@ -1,7 +1,7 @@
 package weapon;
 
 public class Dagger extends Weapon{
-    Dagger() {
+    public Dagger() {
         super("短剣", 6);
     }
 

@@ -14,7 +14,7 @@ public class GameMaster {
     public static void main(String[] args) {
         //party init
         ArrayList<creature.Character> party = new ArrayList<creature.Character>();
-        party.add(new Hero("勇者", 100, "剣"));
+        party.add(new Hero("勇者", 100));
         party.add(new Wizard("魔法使い", 60, 10));
         party.add(new Thief("盗賊", 70));
 
