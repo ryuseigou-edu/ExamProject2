@@ -25,6 +25,12 @@ public abstract class Monster implements Creature {
         System.out.println
                 (this.getName() + this.getSuffix() + "：HP " + this.getHp());
     }
+    public void run() {
+        System.out.println(this.getName() + this.getSuffix() + "は逃げ出した");
+    }
+    public void die() {
+        System.out.println(this.getName() + this.getSuffix() + "を倒した！");
+    }
 
     @Override
     public int getHp() {

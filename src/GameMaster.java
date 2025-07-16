@@ -1,37 +1,37 @@
+import java.util.ArrayList;
 import creature.*;
 import creature.Character;
-import creature.character.Hero;
-import creature.character.SuperHero;
-import creature.character.Thief;
-import creature.character.Wizard;
-import creature.monster.Goblin;
-import creature.monster.Matango;
-import creature.monster.Slime;
-
-import java.util.ArrayList;
+import creature.character.*;
+import creature.monster.*;
 
 public class GameMaster {
     public static void main(String[] args) {
         //party init
-        ArrayList<creature.Character> party = new ArrayList<creature.Character>();
-        party.add(new Hero("勇者", 100));
-        party.add(new Wizard("魔法使い", 60, 10));
-        party.add(new Thief("盗賊", 70));
+        ArrayList<Character> party = new ArrayList<>();
+        Hero hero = new Hero("勇者", 100);
+        Wizard wizard = new Wizard("魔法使い", 60, 10);
+        Thief thief = new Thief("盗賊", 70);
+        party.add(hero);
+        party.add(wizard);
+        party.add(thief);
 
         //monsters init
-        ArrayList<Monster> monsters = new ArrayList<Monster>();
-        monsters.add(new Matango("お化けキノコ", 45, 'A'));
-        monsters.add(new Goblin("ゴブリン", 50, 'A'));
-        monsters.add(new Slime("スライム", 40, 'A'));
+        ArrayList<Monster> monsters = new ArrayList<>();
+        Matango matango = new Matango(45, 'A');
+        Goblin goblin = new Goblin(50, 'A');
+        Slime slime = new Slime(40, 'A');
+        monsters.add(matango);
+        monsters.add(goblin);
+        monsters.add(slime);
 
         System.out.println("---味方パーティー---");
-        party.forEach(creature.Character::showStatus);
+        party.forEach(Character::showStatus);
         System.out.println("---敵グループ---");
         monsters.forEach(Monster::showStatus);
         System.out.println();
 
         System.out.println("味方の総攻撃！");
-        for (creature.Character character : party) {
+        for (Character character : party) {
             for (Monster monster : monsters) {
                 character.attack(monster);
             }
@@ -41,24 +41,19 @@ public class GameMaster {
 
         System.out.println("敵の総攻撃！");
         for (Monster monster : monsters) {
-            for (creature.Character character : party) {
+            for (Character character : party) {
                 monster.attack(character);
             }
         }
         System.out.println();
 
         //スーパーヒーロー進化
-        int heroIndex = -1;
-        for (int i = 0; i < party.size(); i++) {
-            if(party.get(i) instanceof Hero){
-                heroIndex = i;
-                break;
-            }
-        }
+        SuperHero superHero = new SuperHero(hero);
+        party.set(party.indexOf(hero), superHero);
 
-        party.set(heroIndex, new SuperHero((Hero) party.get(heroIndex)));
+        //スーパーヒーローの攻撃
         for (Monster monster : monsters) {
-            party.get(heroIndex).attack(monster);
+            superHero.attack(monster);
         }
         System.out.println();
 
