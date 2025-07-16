@@ -5,10 +5,15 @@ import creature.character.*;
 import creature.monster.*;
 
 public class GameMaster {
+    public static int matangoCnt = 0;
+    public static int goblinCnt = 0;
+    public static int slimeCnt = 0;
+
     public static void main(String[] args) {
-        while(true) {
+        ArrayList<Character> party = new ArrayList<>();
+        ArrayList<Monster> monsters = new ArrayList<>();
+        do {
             //party init
-            ArrayList<Character> party = new ArrayList<>();
             Hero hero = new Hero("勇者", 100);
             Wizard wizard = new Wizard("魔法使い", 60, 10);
             Thief thief = new Thief("盗賊", 70);
@@ -17,13 +22,9 @@ public class GameMaster {
             party.add(thief);
 
             //monsters init
-            ArrayList<Monster> monsters = new ArrayList<>();
-            Matango matango = new Matango(45, 'A');
-            Goblin goblin = new Goblin(50, 'A');
-            Slime slime = new Slime(40, 'A');
-            monsters.add(matango);
-            monsters.add(goblin);
-            monsters.add(slime);
+            for (int i = 0; i < 5; i++) {
+                monsters.add(choiceEnemy());
+            }
 
             System.out.println("---味方パーティー---");
             party.forEach(Character::showStatus);
@@ -84,6 +85,17 @@ public class GameMaster {
                 }
                 System.out.println("生存状況：" + isAlive);
             }
+        } while (party.isEmpty() || monsters.isEmpty());
+    }
+    private static Monster choiceEnemy() {
+        switch ((int)(Math.random() * 3)) {
+            case 0:
+                return new Matango(45, (char) ('A' + matangoCnt++));
+            case 1:
+                return new Goblin(50, (char) ('A' + goblinCnt++));
+            case 2:
+                return new Slime(40, (char) ('A' + slimeCnt++));
         }
+        return null;
     }
 }

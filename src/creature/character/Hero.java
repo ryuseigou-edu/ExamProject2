@@ -15,7 +15,7 @@ public class Hero extends Character {
 
     @Override
     public void attack(final Creature target) {
-        System.out.println(getName() + "は" + this.getWeapon() + "で攻撃！" + target.getName() + "に" + this.getWeapon() + this.getWeapon().attackMessage());
+        System.out.println(getName() + "は" + this.getWeapon().getName() +this.getWeapon().attackMessage() + target.getName() + "に" + this.getWeapon().getDamage() + "のダメージを与えた！");
         target.setHp(target.getHp() - this.getWeapon().getDamage());
     }
 }

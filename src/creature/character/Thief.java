@@ -14,7 +14,7 @@ public class Thief extends Character {
     @Override
     public void attack(final Creature target) {
         System.out.println
-                (this.getName() + "は素早く２回攻撃した！" + target.getName() + "に" + this.getWeapon().attackMessage());
+                (this.getName() + "は素早く2回攻撃した！" + this.getWeapon().getName() +this.getWeapon().attackMessage() + target.getName() + "に" + this.getWeapon().getDamage() + "のダメージを与えた！");
         target.setHp(target.getHp() - this.getWeapon().getDamage() * 2);
     }
     public void guard() {
