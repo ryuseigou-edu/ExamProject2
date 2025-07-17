@@ -9,7 +9,7 @@ public class Wizard extends Character {
 
     public Wizard(final String name, final int hp, final int mp) {
         super(name,hp,new Wand());
-        setHp(mp);
+        setMp(mp);
     }
 
     @Override
