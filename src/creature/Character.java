@@ -5,7 +5,7 @@ import weapon.Weapon;
 public abstract class Character implements Creature {
     private final String name;
     private int hp;
-    private Weapon weapon;
+    private final Weapon weapon;
     public Character(final String name, final int hp, final Weapon weapon) {
         this.name = name;
         if(hp >= 0) {

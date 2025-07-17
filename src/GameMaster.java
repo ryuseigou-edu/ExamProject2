@@ -1,4 +1,9 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import creature.*;
 import creature.Character;
 import creature.character.*;
@@ -32,10 +37,15 @@ public class GameMaster {
             monsters.forEach(Monster::showStatus);
             System.out.println();
 
+            Iterator<Character> it = party.iterator();
             System.out.println("味方の総攻撃！");
-            for (Character character : party) {
-                for (Monster monster : monsters) {
-                    character.attack(monster);
+            while(it.hasNext()) {
+                Character cur = it.next();
+
+
+                if() {}
+                if(monsters.isEmpty()) {
+                    break;
                 }
             }
 
@@ -97,5 +107,25 @@ public class GameMaster {
                 return new Slime(40, (char) ('A' + slimeCnt++));
         }
         return null;
+    }
+    private static Monster choiceTarget() {
+        do {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+                int choice = Integer.parseInt(br.readLine());
+                switch (choice) {
+                    case 1:
+                        return choiceTarget();
+                        break;
+
+                }
+            } catch (IOException e) {
+                System.err.println("あー入出力エラー。おわりやね。");
+            } catch (NumberFormatException e) {
+                System.err.println("マジ半角数字で頼む。");
+            } catch (NullPointerException e) {
+                System.err.println("なんか入れろや。");
+            }
+        } while ();
+        switch
     }
 }
