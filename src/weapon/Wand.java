@@ -2,7 +2,7 @@ package weapon;
 
 public class Wand extends Weapon{
     public Wand() {
-        super("魔法の杖", 15);
+        super("魔法の杖", 15,10);
     }
 
     @Override

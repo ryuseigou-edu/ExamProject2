@@ -16,7 +16,7 @@ public class GameMaster {
     private static ArrayList<Character> party = new ArrayList<>();
     private static ArrayList<Monster> monsters = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         //party init
         Hero hero = new Hero("勇者", 100);
         Wizard wizard = new Wizard("魔法使い", 60, 10);
@@ -44,15 +44,79 @@ public class GameMaster {
             while (itChar.hasNext()) {
                 printEnemyStatus();
                 Character curChar = itChar.next();
-                System.out.print("[" + curChar.getName() + "]が攻撃するモンスターを選ぶんだドン(半角数字で頼む) >> ");
-                Monster curTar = choiceTarget();
-                curChar.attack(curTar);
+                Monster curTar = monsters.getFirst();
+                int choiceAction;
+                if (curChar instanceof SuperHero curSuperHero) {
+                    curTar = choiceTarget(curChar);
+                    curSuperHero.attack(curTar);
+                } else if(curChar instanceof Hero curHero) {
+                    do {
+                        System.out.println("1: 攻撃");
+                        System.out.println("2: スーパーヒーローに進化！");
+                        System.out.print("行動を選択するドン！(半角数字で頼む) >> ");
+                        choiceAction = readInt();
+                        switch (choiceAction) {
+                            case 1:
+                                curTar = choiceTarget(curChar);
+                                curHero.attack(curTar);
+                                break;
+                            case 2:
+                                SuperHero curSuperHero = evoHero(curHero);
+                                if(!curSuperHero.isAlive()) {
+                                    curSuperHero.die();
+                                    itChar.remove();
+                                }
+                                break;
+                            default:
+                                System.err.println("選択肢からで頼む。");
+                                Thread.sleep(100);
+                        }
+                    } while (!(choiceAction == 1) && !(choiceAction == 2));
+                } else if (curChar instanceof Thief curThief) {
+                    do {
+                        System.out.println("1: 攻撃");
+                        System.out.println("2: 守り");
+                        System.out.print("行動を選択するドン！(半角数字で頼む) >> ");
+                        choiceAction = readInt();
+                        switch (choiceAction) {
+                            case 1:
+                                curTar = choiceTarget(curChar);
+                                curThief.attack(curTar);
+                                break;
+                            case 2:
+                                curThief.guard();
+                                break;
+                            default:
+                                System.err.println("選択肢からで頼む。");
+                                Thread.sleep(100);
+                        }
+                    } while (!(choiceAction == 1) && !(choiceAction == 2));
+                } else if (curChar instanceof Wizard curWizard) {
+                    do {
+                        System.out.println("1: 攻撃");
+                        System.out.println("2: 魔法攻撃");
+                        System.out.print(curWizard.getName() + "の行動を選択するドン！(半角数字で頼む) >> ");
+                        choiceAction = readInt();
+                        curTar = choiceTarget(curChar);
+                        switch (choiceAction) {
+                            case 1:
+                                curWizard.attack(curTar);
+                                break;
+                            case 2:
+                                curWizard.magic(curTar);
+                                break;
+                            default:
+                                System.err.println("選択肢からで頼む。");
+                                Thread.sleep(100);
+                        }
+                    } while (!(choiceAction == 1) && !(choiceAction == 2));
+                }
                 if (curTar.getHp() <= 5) {
                     curTar.run();
-                    itChar.remove();
+                    monsters.remove(curTar);
                 } else if (!curTar.isAlive()) {
                     curTar.die();
-                    itChar.remove();
+                    monsters.remove(curTar);
                 }
                 if (monsters.isEmpty()) {
                     break;
@@ -65,10 +129,16 @@ public class GameMaster {
             while (itMon.hasNext()) {
                 Monster curMon = itMon.next();
                 Character curTar = party.get((int) (Math.random() * party.size()));
-                curMon.attack(curTar);
+                if (curMon instanceof Matango curMatango) {
+                    curMatango.attack(curTar);
+                } else if (curMon instanceof Goblin curGoblin) {
+                    curGoblin.attack(curTar);
+                } else if (curMon instanceof Slime curSlime) {
+                    curSlime.attack(curTar);
+                }
                 if (!curTar.isAlive()) {
                     curTar.die();
-                    itMon.remove();
+                    party.remove(curTar);
                 }
                 printPartyStatus();
                 if (monsters.isEmpty()) {
@@ -77,15 +147,12 @@ public class GameMaster {
             }
         } while (!party.isEmpty() && !monsters.isEmpty());
 
-        //スーパーヒーロー進化
-        SuperHero superHero = new SuperHero(hero);
-        party.set(party.indexOf(hero), superHero);
-
-        //スーパーヒーローの攻撃
-        for (Monster monster : monsters) {
-            superHero.attack(monster);
-        }
         System.out.println();
+        if (monsters.isEmpty()) {
+            System.out.println("敵を全て倒した" + party.get(party.indexOf(hero)) + "達は勝利した!");
+        } else if (party.isEmpty()) {
+            System.out.println("味方パーティは全滅してしまった…");
+        }
 
         System.out.println("---味方パーティ最終ステータス---");
         for (Character character : party) {
@@ -113,6 +180,9 @@ public class GameMaster {
             }
             System.out.println("生存状況：" + isAlive);
         }
+        if (monsters.isEmpty()) {
+            System.out.println("殲　滅　！");
+        }
     }
     private static Monster choiceEnemy() {
         switch ((int)(Math.random() * 3)) {
@@ -126,18 +196,31 @@ public class GameMaster {
         return null;
     }
 
-    private static Monster choiceTarget() {
+    private static Monster choiceTarget(Character curChar) throws InterruptedException {
+        do {
+            try {
+                System.out.print("[" + curChar.getName() + "]が攻撃するモンスターを選ぶんだドン(半角数字で頼む) >> ");
+                int choice = readInt();
+                return monsters.get(choice - 1);
+            } catch (IndexOutOfBoundsException e) {
+                System.err.println("存在するやつで頼む。");
+                Thread.sleep(100);
+
+            }
+        } while (true);
+    }
+
+    private static int readInt() throws InterruptedException {
         do {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                int choice = Integer.parseInt(br.readLine());
-                return monsters.get(choice - 1);
+                return Integer.parseInt(br.readLine());
             } catch (IOException e) {
                 System.err.println("あー入出力エラー。おわりやね。");
+                Thread.sleep(100);
             } catch (NumberFormatException e) {
                 System.err.println("マジ半角数字で頼む。");
-            } catch (IndexOutOfBoundsException e) {
-                System.err.println("存在するやつで頼む。");
+                Thread.sleep(100);
             }
         } while (true);
     }
@@ -169,5 +252,11 @@ public class GameMaster {
             System.out.println("全てのモンスターは討伐されました！");
         }
         System.out.println("----------------------------");
+    }
+
+    private static SuperHero evoHero(Hero hero) {
+        SuperHero superHero = new SuperHero(hero);
+        party.set(party.indexOf(hero), superHero);
+        return superHero;
     }
 }

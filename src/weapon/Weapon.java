@@ -9,6 +9,11 @@ public abstract class Weapon {
         this.setName(name);
         this.setDamage(damage);
     }
+    Weapon(final String name, final int damage, int cost) {
+        this.setName(name);
+        this.setDamage(damage);
+        this.setCost(cost);
+    }
 
     abstract public String attackMessage();
 
