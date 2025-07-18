@@ -42,7 +42,6 @@ public class GameMaster {
             System.out.println("味方の総攻撃！");
             Iterator<Character> itChar = party.iterator();
             while (itChar.hasNext()) {
-                printEnemyStatus();
                 Character curChar = itChar.next();
                 Monster curTar = monsters.getFirst();
                 int choiceAction;
@@ -53,8 +52,7 @@ public class GameMaster {
                     do {
                         System.out.println("1: 攻撃");
                         System.out.println("2: スーパーヒーローに進化！");
-                        System.out.print("行動を選択するドン！(半角数字で頼む) >> ");
-                        choiceAction = readInt();
+                        choiceAction = readInt("行動を選択するドン！(半角数字で頼む) >> ");
                         switch (choiceAction) {
                             case 1:
                                 curTar = choiceTarget(curChar);
@@ -76,8 +74,7 @@ public class GameMaster {
                     do {
                         System.out.println("1: 攻撃");
                         System.out.println("2: 守り");
-                        System.out.print("行動を選択するドン！(半角数字で頼む) >> ");
-                        choiceAction = readInt();
+                        choiceAction = readInt("行動を選択するドン！(半角数字で頼む) >> ");
                         switch (choiceAction) {
                             case 1:
                                 curTar = choiceTarget(curChar);
@@ -95,14 +92,14 @@ public class GameMaster {
                     do {
                         System.out.println("1: 攻撃");
                         System.out.println("2: 魔法攻撃");
-                        System.out.print(curWizard.getName() + "の行動を選択するドン！(半角数字で頼む) >> ");
-                        choiceAction = readInt();
-                        curTar = choiceTarget(curChar);
+                        choiceAction = readInt("行動を選択するドン！(半角数字で頼む) >> ");
                         switch (choiceAction) {
                             case 1:
+                                curTar = choiceTarget(curChar);
                                 curWizard.attack(curTar);
                                 break;
                             case 2:
+                                curTar = choiceTarget(curChar);
                                 curWizard.magic(curTar);
                                 break;
                             default:
@@ -192,15 +189,16 @@ public class GameMaster {
                 return new Goblin(50, (char) ('A' + goblinCnt++));
             case 2:
                 return new Slime(40, (char) ('A' + slimeCnt++));
+            default:
+                throw new IllegalArgumentException();
         }
-        return null;
     }
 
     private static Monster choiceTarget(Character curChar) throws InterruptedException {
         do {
+            printEnemyStatus();
             try {
-                System.out.print("[" + curChar.getName() + "]が攻撃するモンスターを選ぶんだドン(半角数字で頼む) >> ");
-                int choice = readInt();
+                int choice = readInt("[" + curChar.getName() + "]が攻撃するモンスターを選ぶんだドン(半角数字で頼む) >> ");
                 return monsters.get(choice - 1);
             } catch (IndexOutOfBoundsException e) {
                 System.err.println("存在するやつで頼む。");
@@ -210,9 +208,10 @@ public class GameMaster {
         } while (true);
     }
 
-    private static int readInt() throws InterruptedException {
+    private static int readInt(String message) throws InterruptedException {
         do {
             try {
+                System.out.print(message);
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 return Integer.parseInt(br.readLine());
             } catch (IOException e) {
