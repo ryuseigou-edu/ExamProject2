@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -34,16 +35,18 @@ public class GameMaster {
         party.forEach(Character::showStatus);
         System.out.println("---敵グループ---");
         monsters.forEach(Monster::showStatus);
-        System.out.println();
+        br();
 
 
 
         do {
             System.out.println("味方の総攻撃！");
+            br();
             Iterator<Character> itChar = party.iterator();
             while (itChar.hasNext()) {
                 Character curChar = itChar.next();
                 Monster curTar = monsters.getFirst();
+                System.out.println("<<<["+curChar.getName()+"]のターン>>>");
                 int choiceAction;
                 if (curChar instanceof SuperHero curSuperHero) {
                     curTar = choiceTarget(curChar);
@@ -74,7 +77,7 @@ public class GameMaster {
                     do {
                         System.out.println("1: 攻撃");
                         System.out.println("2: 守り");
-                        choiceAction = readInt("行動を選択するドン！(半角数字で頼む) >> ");
+                        choiceAction = readInt("["+curThief.getName()+"]の行動を選択するドン！(半角数字で頼む) >> ");
                         switch (choiceAction) {
                             case 1:
                                 curTar = choiceTarget(curChar);
@@ -92,7 +95,7 @@ public class GameMaster {
                     do {
                         System.out.println("1: 攻撃");
                         System.out.println("2: 魔法攻撃");
-                        choiceAction = readInt("行動を選択するドン！(半角数字で頼む) >> ");
+                        choiceAction = readInt("["+curWizard.getName()+"]の行動を選択するドン！(半角数字で頼む) >> ");
                         switch (choiceAction) {
                             case 1:
                                 curTar = choiceTarget(curChar);
@@ -108,21 +111,24 @@ public class GameMaster {
                         }
                     } while (!(choiceAction == 1) && !(choiceAction == 2));
                 }
-                if (curTar.getHp() <= 5) {
-                    curTar.run();
-                    monsters.remove(curTar);
-                } else if (!curTar.isAlive()) {
+                if (!curTar.isAlive()) {
                     curTar.die();
+                    monsters.remove(curTar);
+                } else if (curTar.getHp() <= 5) {
+                    curTar.run();
                     monsters.remove(curTar);
                 }
                 if (monsters.isEmpty()) {
                     break;
                 }
+                br();
+            }
+            if (monsters.isEmpty()) {
+                break;
             }
 
-            System.out.println();
             Iterator<Monster> itMon = monsters.iterator();
-            System.out.println("敵の総攻撃！");
+            System.out.println("<<<敵の総攻撃！>>>");
             while (itMon.hasNext()) {
                 Monster curMon = itMon.next();
                 Character curTar = party.get((int) (Math.random() * party.size()));
@@ -137,16 +143,17 @@ public class GameMaster {
                     curTar.die();
                     party.remove(curTar);
                 }
-                printPartyStatus();
                 if (monsters.isEmpty()) {
                     break;
                 }
             }
-        } while (!party.isEmpty() && !monsters.isEmpty());
 
-        System.out.println();
+            br();
+            printPartyStatus();
+        } while (!party.isEmpty() && !monsters.isEmpty());
+        br();
         if (monsters.isEmpty()) {
-            System.out.println("敵を全て倒した" + party.get(party.indexOf(hero)) + "達は勝利した!");
+            System.out.println("敵を全て倒した" + party.getFirst().getName() + "達は勝利した!");
         } else if (party.isEmpty()) {
             System.out.println("味方パーティは全滅してしまった…");
         }
@@ -164,7 +171,7 @@ public class GameMaster {
             System.out.println("生存状況：" + isAlive);
         }
 
-        System.out.println();
+        br();
         System.out.println("---敵グループ最終ステータス---");
         for (Monster monster : monsters) {
             monster.showStatus();
@@ -211,8 +218,8 @@ public class GameMaster {
     private static int readInt(String message) throws InterruptedException {
         do {
             try {
-                System.out.print(message);
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                System.out.print(message);
                 return Integer.parseInt(br.readLine());
             } catch (IOException e) {
                 System.err.println("あー入出力エラー。おわりやね。");
@@ -257,5 +264,13 @@ public class GameMaster {
         SuperHero superHero = new SuperHero(hero);
         party.set(party.indexOf(hero), superHero);
         return superHero;
+    }
+    private static void br() {
+        System.out.println();
+    }
+    private static void br(int cnt) {
+        for(int i = 0; i < cnt; i++) {
+            System.out.println();
+        }
     }
 }
