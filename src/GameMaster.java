@@ -64,7 +64,9 @@ public class GameMaster {
                             case 2:
                                 SuperHero curSuperHero = evoHero(curHero);
                                 if(!curSuperHero.isAlive()) {
+                                    System.out.print("が、");
                                     curSuperHero.die();
+                                    System.out.print("www");
                                     itChar.remove();
                                 }
                                 break;
